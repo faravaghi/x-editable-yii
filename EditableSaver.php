@@ -108,7 +108,9 @@ class EditableSaver extends CComponent
             throw new CException(Yii::t('EditableSaver.editable','Property "attribute" should be defined.'));
         }
         
-        $this->model = new $this->modelClass();
+        if($this->model == NULL){
+            $this->model = new $this->modelClass();
+        }
         
         $isFormModel = $this->model instanceOf CFormModel;
         $isMongo = EditableField::isMongo($this->model);
@@ -225,10 +227,14 @@ class EditableSaver extends CComponent
     */
     public function setAttribute($name, $value)
     {
-         $this->model->$name = $value;
-         if(!in_array($name, $this->changedAttributes)) {
-             $this->changedAttributes[] = $name;
-         }
+	if($this->model == NULL){
+            $this->model = new $this->modelClass();
+	}
+
+	$this->model->$name = $value;
+        if(!in_array($name, $this->changedAttributes)) {
+            $this->changedAttributes[] = $name;
+        }
     }
 
     /**
